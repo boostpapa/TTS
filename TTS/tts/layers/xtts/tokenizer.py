@@ -115,6 +115,12 @@ _abbreviations = {
             # There are not many common abbreviations in Arabic as in English.
         ]
     ],
+    "zh": [
+        (re.compile("\\b%s\\." % x[0], re.IGNORECASE), x[1])
+        for x in [
+            # Chinese doesn't typically use abbreviations in the same way as Latin-based scripts.
+        ]
+    ],
     "zh-cn": [
         (re.compile("\\b%s\\." % x[0], re.IGNORECASE), x[1])
         for x in [
@@ -280,7 +286,7 @@ _symbols_multilingual = {
             ("°", " درجة "),
         ]
     ],
-    "zh-cn": [
+    "zh": [
         # Chinese
         (re.compile(r"%s" % re.escape(x[0]), re.IGNORECASE), x[1])
         for x in [
@@ -293,6 +299,19 @@ _symbols_multilingual = {
             ("°", " 度 "),
         ]
     ],
+    "zh-cn": [
+        # Chinese
+        (re.compile(r"%s" % re.escape(x[0]), re.IGNORECASE), x[1])
+        for x in [
+            ("&", " 和 "),
+            ("@", " 在 "),
+            ("%", " 百分之 "),
+            ("#", " 号 "),
+            ("$", " 美元 "),
+            ("£", " 英镑 "),
+            ("°", " 度 "),
+        ]   
+    ],  
     "cs": [
         # Czech
         (re.compile(r"%s" % re.escape(x[0]), re.IGNORECASE), x[1])
@@ -571,7 +590,7 @@ class VoiceBpeTokenizer:
             )
 
     def preprocess_text(self, txt, lang):
-        if lang in {"ar", "cs", "de", "en", "es", "fr", "hu", "it", "nl", "pl", "pt", "ru", "tr", "zh-cn", "zh-cn"}:
+        if lang in {"ar", "cs", "de", "en", "es", "fr", "hu", "it", "nl", "pl", "pt", "ru", "tr", "zh", "zh-cn"}:
             txt = multilingual_cleaners(txt, lang)
             if lang in {"zh", "zh-cn"}:
                 txt = chinese_transliterate(txt)

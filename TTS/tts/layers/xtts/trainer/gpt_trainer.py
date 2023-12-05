@@ -225,11 +225,11 @@ class GPTTrainer(BaseTTS):
 
     @torch.no_grad()
     def test_run(self, assets) -> Tuple[Dict, Dict]:  # pylint: disable=W0613
+        test_audios = {}
         if self.config.test_sentences:
             # init gpt for inference mode
             self.xtts.gpt.init_gpt_for_inference(kv_cache=self.args.kv_cache, use_deepspeed=False)
             self.xtts.gpt.eval()
-            test_audios = {}
             print(" | > Synthesizing test sentences.")
             for idx, s_info in enumerate(self.config.test_sentences):
                 wav = self.xtts.synthesize(
@@ -318,9 +318,10 @@ class GPTTrainer(BaseTTS):
         batch["cond_idxs"] = None
         return self.train_step(batch, criterion)
 
-    def on_epoch_start(self, trainer):  # pylint: disable=W0613
-        # guarante that dvae will be in eval mode after .train() on evaluation end
-        self.dvae = self.dvae.eval()
+    def on_train_epoch_start(self, trainer):
+        trainer.model.eval()  # the whole model to eval
+        # put gpt model in training mode
+        trainer.model.xtts.gpt.train()
 
     def on_init_end(self, trainer):  # pylint: disable=W0613
         # ignore similarities.pth on clearml save/upload

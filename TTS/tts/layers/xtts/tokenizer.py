@@ -666,7 +666,6 @@ class VoiceBpeTokenizer:
         lang = lang.split("-")[0]  # remove the region
         self.check_input_length(txt, lang)
         txt = self.preprocess_text(txt, lang)
-        lang = "zh-cn" if lang == "zh" else lang
         txt = f"[{lang}]{txt}"
         txt = txt.replace(" ", "[SPACE]")
         return self.tokenizer.encode(txt).ids

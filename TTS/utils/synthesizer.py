@@ -91,7 +91,7 @@ class Synthesizer(nn.Module):
 
         if tts_checkpoint:
             self._load_tts(tts_checkpoint, tts_config_path, use_cuda)
-            self.output_sample_rate = self.tts_config.audio["sample_rate"]
+            self.output_sample_rate = self.tts_config.audio["output_sample_rate"]
 
         if vocoder_checkpoint:
             self._load_vocoder(vocoder_checkpoint, vocoder_config, use_cuda)
